@@ -1,4 +1,4 @@
-import { catsData } from "../meme_picker/data.js"
+import { catsData } from "./data.js"
 
 
 const emotionRadios = document.getElementById('emotion-radios')
