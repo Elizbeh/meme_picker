@@ -1,4 +1,4 @@
-import { catsData } from "../pumpkin_perfect_meme_picker/data.js"
+import { catsData } from "../meme-picker/data.js"
 
 
 const emotionRadios = document.getElementById('emotion-radios')
