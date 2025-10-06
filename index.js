@@ -1,0 +1,113 @@
+import { catsData } from "../pumpkin_perfect_meme_picker/data.js"
+
+
+const emotionRadios = document.getElementById('emotion-radios')
+const getImageBtn = document.getElementById('get-image-btn')
+const gifsOnlyOption = document.getElementById('gifs-only-option')
+const memeModal = document.getElementById('meme-modal')
+const memeModalInner = document.getElementById('meme-modal-inner')
+const memeModalCloseBtn = document.getElementById('meme-modal-close-btn')
+
+
+
+emotionRadios.addEventListener("change", highlightCheckedOption)
+
+memeModalCloseBtn.addEventListener('click', closeModal)
+*
+getImageBtn.addEventListener('click', renderCat)
+
+
+function highlightCheckedOption(e){
+    const radios = document.getElementsByClassName('radio')
+    for (let radio of radios) {
+        radio.classList.remove('highlight')
+    }
+    document.getElementById(e.target.id).parentElement.classList.add('highlight')
+}
+
+function getSingleCatObject() {
+    const catsArray = getMatchingCatsArray()
+    if (catsArray.length === 1) {
+        return catsArray[0]
+    } else {
+        const randomNumber = Math.floor(Math.random() * catsArray.length)
+        return catsArray[randomNumber]
+    }
+}
+
+
+function getMatchingCatsArray() {
+    if (document.querySelector('input[type="radio"]:checked')) {
+        const selectedEmotion = document.querySelector('input[type="radio"]:checked').value
+        const isGif = gifsOnlyOption.checked
+
+        const matchingCatArray = catsData.filter(function(cat){
+        if (isGif) {
+            return cat.emotionTags.includes(selectedEmotion) && cat.isGif
+        } else {
+            return cat.emotionTags.includes(selectedEmotion)
+        }
+
+    }) 
+
+    return matchingCatArray
+    }    
+}
+
+function renderCat(cats) {
+    const catObject = getSingleCatObject()
+    memeModalInner.innerHTML = `<img 
+        class="cat-img" 
+        src="${catObject.image}"
+        alt="${catObject.alt}"
+        >`
+    memeModal.style.display = "flex"
+}
+
+
+function closeModal(){
+    memeModal.style.display = "none"
+}
+
+function getEmotionArr(cats) {
+
+    const emotionTagsArr = []
+
+    for(let cat of cats) {
+        for(let emotion of cat.emotionTags) {
+           if (!emotionTagsArr.includes(emotion)) {
+            emotionTagsArr.push(emotion)
+             
+           }
+        }
+    }
+    return emotionTagsArr
+}
+
+console.log(getEmotionArr(catsData))
+
+
+
+function  renderEmotionsRadios(cats) {
+    const emotionRadios = document.getElementById("emotion-radios")
+    let radioItems = ``
+
+    const emotions = getEmotionArr(cats)
+    for (let emotion of emotions) {
+        radioItems +=  `
+            <div class="radio">
+            <label for=${emotion}>${emotion}</label>
+                <input 
+                    type="radio"
+                    id=${emotion}
+                    value=${emotion}
+                    name="emotions"
+                />
+            </div>
+                `
+    } 
+    emotionRadios.innerHTML = radioItems
+}
+
+renderEmotionsRadios(catsData)
+
